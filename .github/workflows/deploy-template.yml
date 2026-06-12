@@ -27,6 +27,7 @@ concurrency:
 env:
   DOCKERHUB_USERNAME: rosssearle
   IMAGE_NAME: rosssearle/ubuntu-desktop
+  CODER_URL: https://coder.rosssearle.com
   TEMPLATE_DIR: template
   DEFAULT_TEMPLATE_NAME: main-docker
 
@@ -91,7 +92,7 @@ jobs:
         id: coder
         shell: bash
         env:
-          RAW_CODER_URL: ${{ secrets.CODER_URL }}
+          RAW_CODER_URL: ${{ env.CODER_URL }}
           RAW_CODER_ACCESS_TOKEN: ${{ secrets.CODER_ACCESS_TOKEN }}
         run: |
           set -euo pipefail
