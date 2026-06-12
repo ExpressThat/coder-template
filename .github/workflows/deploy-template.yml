@@ -60,33 +60,6 @@ jobs:
           echo "image_tag=$image_tag" >> "$GITHUB_OUTPUT"
           echo "template_name=$template_name" >> "$GITHUB_OUTPUT"
 
-      - name: Set up .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 10.0.x
-
-      - name: Install NativeAOT build dependencies
-        shell: bash
-        run: |
-          set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends clang zlib1g-dev
-
-      - name: Publish ex CLI for Linux
-        shell: bash
-        run: |
-          set -euo pipefail
-          dotnet publish tools/ex/ex.csproj \
-            -c Release \
-            -r linux-x64 \
-            --self-contained true \
-            -p:PublishAot=true \
-            -p:StripSymbols=true \
-            -o /tmp/ex-linux-x64
-          install -m 0755 /tmp/ex-linux-x64/ex "$TEMPLATE_DIR/image-assets/ex"
-          test -x "$TEMPLATE_DIR/image-assets/ex"
-          ls -lh "$TEMPLATE_DIR/image-assets/ex"
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 

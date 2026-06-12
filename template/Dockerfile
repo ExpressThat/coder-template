@@ -142,11 +142,10 @@ COPY image-assets/desktop-defaults.sh /usr/local/bin/desktop-defaults
 COPY image-assets/chrome-coder /usr/local/bin/chrome-coder
 COPY image-assets/code-coder /usr/local/bin/code-coder
 COPY image-assets/appimage-run /usr/local/bin/appimage-run
-COPY image-assets/ex /usr/local/bin/ex
 COPY image-assets/desktop-defaults.desktop /etc/skel/.config/autostart/desktop-defaults.desktop
 COPY image-assets/google-chrome-coder.desktop /usr/local/share/applications/google-chrome-coder.desktop
 COPY image-assets/code-coder.desktop /usr/local/share/applications/code-coder.desktop
 
-RUN chmod +x /usr/local/bin/desktop-defaults /usr/local/bin/chrome-coder /usr/local/bin/code-coder /usr/local/bin/appimage-run /usr/local/bin/ex
+RUN chmod +x /usr/local/bin/desktop-defaults /usr/local/bin/chrome-coder /usr/local/bin/code-coder /usr/local/bin/appimage-run
 
 USER coder
