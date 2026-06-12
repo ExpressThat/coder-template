@@ -73,6 +73,8 @@ jobs:
           context: ./${{ env.TEMPLATE_DIR }}
           file: ./${{ env.TEMPLATE_DIR }}/Dockerfile
           push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: |
             ${{ env.IMAGE_NAME }}:${{ steps.values.outputs.image_tag }}
             ${{ env.IMAGE_NAME }}:latest
