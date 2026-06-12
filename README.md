@@ -27,3 +27,21 @@ Manual runs can override the image tag and Coder template name. The default temp
 ## Template
 
 See `template/README.md` for local template usage and image details.
+
+## Tools
+
+`tools/ex` is a Terminal.Gui-based CLI/TUI helper. It opens to a tool menu; the first tool lists public repositories from `ross-s` and `ExpressThat`, lets you select one, then runs `git clone` into the current working directory.
+
+The GitHub Actions deployment publishes `ex` as a Linux NativeAOT binary and bakes it into the desktop image at `/usr/local/bin/ex`, so it can be run from anywhere inside the Coder workspace container.
+
+Run it during development:
+
+```powershell
+dotnet run --project tools/ex
+```
+
+Publish a NativeAOT executable:
+
+```powershell
+dotnet publish tools/ex -c Release -r win-x64
+```

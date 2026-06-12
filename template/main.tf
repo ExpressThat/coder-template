@@ -199,8 +199,10 @@ resource "docker_container" "workspace" {
   memory     = data.coder_parameter.memory.value * 1024
   shm_size   = 2048
 
-  # AppImages prefer FUSE. The appimage-run helper can fall back to extraction,
-  # but passing /dev/fuse gives the best compatibility when the Docker host allows it.
+  # AppImages prefer FUSE. The image also sets APPIMAGE_EXTRACT_AND_RUN=1 so
+  # direct AppImage execution falls back cleanly when the host blocks FUSE.
+  privileged = true
+
   capabilities {
     add = ["SYS_ADMIN"]
   }

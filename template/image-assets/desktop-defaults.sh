@@ -86,4 +86,19 @@ EOF
 
 chmod +x "$HOME/Desktop/"*.desktop 2>/dev/null || true
 
+for launcher in "$HOME/Desktop/"*.desktop; do
+  [ -f "$launcher" ] || continue
+
+  chmod 0755 "$launcher" 2>/dev/null || true
+
+  if command -v gio >/dev/null 2>&1; then
+    gio set "$launcher" metadata::trusted true 2>/dev/null || true
+
+    checksum="$(sha256sum "$launcher" | awk '{print $1}')"
+    gio set -t string "$launcher" metadata::xfce-exe-checksum "$checksum" 2>/dev/null || true
+  fi
+
+  touch "$launcher" 2>/dev/null || true
+done
+
 touch "$HOME/.desktop_defaults_done"
