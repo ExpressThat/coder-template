@@ -87,10 +87,42 @@ jobs:
           sed -i -E "s#image_name[[:space:]]+= \".*\"#image_name     = \"$image\"#" "$TEMPLATE_DIR/main.tf"
           grep 'image_name' "$TEMPLATE_DIR/main.tf"
 
+      - name: Normalize Coder secrets
+        id: coder
+        shell: bash
+        env:
+          RAW_CODER_URL: ${{ secrets.CODER_URL }}
+          RAW_CODER_ACCESS_TOKEN: ${{ secrets.CODER_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          coder_url="$(printf '%s' "$RAW_CODER_URL" | tr -d '\r\n' | sed -E 's#[[:space:]]+$##; s#/$##')"
+          if [ -z "$coder_url" ]; then
+            echo "CODER_URL secret is empty." >&2
+            exit 1
+          fi
+
+          case "$coder_url" in
+            http://*|https://*) ;;
+            *)
+              echo "CODER_URL must start with http:// or https://." >&2
+              exit 1
+              ;;
+          esac
+
+          token_length="$(printf '%s' "$RAW_CODER_ACCESS_TOKEN" | wc -c | tr -d ' ')"
+          if [ "$token_length" -eq 0 ]; then
+            echo "CODER_ACCESS_TOKEN secret is empty." >&2
+            exit 1
+          fi
+
+          echo "::add-mask::$coder_url"
+          echo "url=$coder_url" >> "$GITHUB_OUTPUT"
+
       - name: Set up Coder CLI
         uses: coder/setup-action@v1
         with:
-          access_url: ${{ secrets.CODER_URL }}
+          access_url: ${{ steps.coder.outputs.url }}
           coder_session_token: ${{ secrets.CODER_ACCESS_TOKEN }}
 
       - name: Deploy Coder template
