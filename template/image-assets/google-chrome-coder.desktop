@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Google Chrome
+Exec=chrome-coder %U
+Icon=google-chrome
+Terminal=false
+Categories=Network;WebBrowser;

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+mkdir -p "$HOME/.vscode-desktop"
+exec /usr/bin/code \
+  --no-sandbox \
+  --disable-dev-shm-usage \
+  --disable-gpu \
+  --user-data-dir="$HOME/.vscode-desktop" \
+  "$@"

@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ "$#" -lt 1 ]; then
+  echo "Usage: appimage-run /path/to/app.AppImage [args...]" >&2
+  exit 2
+fi
+
+appimage="$1"
+shift
+
+if [ ! -f "$appimage" ]; then
+  echo "AppImage not found: $appimage" >&2
+  exit 1
+fi
+
+chmod +x "$appimage" 2>/dev/null || true
+
+if "$appimage" "$@"; then
+  exit 0
+fi
+
+status=$?
+
+echo "Native AppImage launch failed with exit code $status; retrying with extraction fallback..." >&2
+APPIMAGE_EXTRACT_AND_RUN=1 exec "$appimage" "$@"

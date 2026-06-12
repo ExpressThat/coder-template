@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=Desktop Defaults
+Exec=/usr/local/bin/desktop-defaults
+X-GNOME-Autostart-enabled=true
