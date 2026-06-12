@@ -9,7 +9,7 @@ The workflow at `.github/workflows/deploy-template.yml` runs on pushes to `main`
 - Builds `template/Dockerfile`.
 - Pushes `rosssearle/ubuntu-desktop:<short-sha>` and `rosssearle/ubuntu-desktop:latest` to Docker Hub.
 - Rewrites `template/main.tf` during CI so the template points at the newly pushed SHA-tagged image.
-- Pushes the template to your Coder instance with `coder templates push`.
+- Stages only `template/main.tf` and `template/README.md`, then pushes that small template bundle to your Coder instance with `coder templates push`.
 
 The Coder URL is configured directly in the workflow as:
 

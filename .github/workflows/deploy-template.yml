@@ -14,7 +14,7 @@ on:
       template_name:
         description: "Coder template name to push."
         required: false
-        default: docker-desktop
+        default: main-docker
         type: string
 
 permissions:
@@ -29,6 +29,7 @@ env:
   IMAGE_NAME: rosssearle/ubuntu-desktop
   CODER_URL: https://coder.rosssearle.com
   TEMPLATE_DIR: template
+  CODER_TEMPLATE_UPLOAD_DIR: /tmp/coder-template-upload
   DEFAULT_TEMPLATE_NAME: main-docker
 
 jobs:
@@ -115,6 +116,16 @@ jobs:
           sed -i -E "s#image_name[[:space:]]+= \".*\"#image_name     = \"$image\"#" "$TEMPLATE_DIR/main.tf"
           grep 'image_name' "$TEMPLATE_DIR/main.tf"
 
+      - name: Stage Coder template upload
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf "$CODER_TEMPLATE_UPLOAD_DIR"
+          mkdir -p "$CODER_TEMPLATE_UPLOAD_DIR"
+          cp "$TEMPLATE_DIR/main.tf" "$CODER_TEMPLATE_UPLOAD_DIR/main.tf"
+          cp "$TEMPLATE_DIR/README.md" "$CODER_TEMPLATE_UPLOAD_DIR/README.md"
+          find "$CODER_TEMPLATE_UPLOAD_DIR" -maxdepth 1 -type f -printf '%f %s bytes\n'
+
       - name: Normalize Coder secrets
         id: coder
         shell: bash
@@ -158,7 +169,7 @@ jobs:
         run: |
           set -euo pipefail
           coder templates push "${{ steps.values.outputs.template_name }}" \
-            --directory "$TEMPLATE_DIR" \
+            --directory "$CODER_TEMPLATE_UPLOAD_DIR" \
             --yes \
             --ignore-lockfile \
             --name "${{ steps.values.outputs.image_tag }}" \
