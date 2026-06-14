@@ -121,7 +121,15 @@ RUN mkdir -p "$NVM_DIR" \
   && nvm alias default 'lts/*' \
   && nvm use default \
   && npm install -g pnpm@11.3.0 \
-  && curl -fsSL https://bun.sh/install | bash \
+  && bun_target=linux-x64-baseline \
+  && bun_zip="$BUN_INSTALL/bin/bun.zip" \
+  && mkdir -p "$BUN_INSTALL/bin" \
+  && curl -fsSL -o "$bun_zip" "https://github.com/oven-sh/bun/releases/latest/download/bun-${bun_target}.zip" \
+  && unzip -oqd "$BUN_INSTALL/bin" "$bun_zip" \
+  && mv "$BUN_INSTALL/bin/bun-${bun_target}/bun" "$BUN_INSTALL/bin/bun" \
+  && rm -rf "$BUN_INSTALL/bin/bun-${bun_target}" "$bun_zip" \
+  && chmod +x "$BUN_INSTALL/bin/bun" \
+  && ln -sf bun "$BUN_INSTALL/bin/bunx" \
   && ln -sf "$NVM_DIR/versions/node/$(nvm version default)/bin/node" /usr/local/bin/node \
   && ln -sf "$NVM_DIR/versions/node/$(nvm version default)/bin/npm" /usr/local/bin/npm \
   && ln -sf "$NVM_DIR/versions/node/$(nvm version default)/bin/npx" /usr/local/bin/npx \
