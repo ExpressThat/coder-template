@@ -8,7 +8,7 @@ This template provisions a Coder workspace as a Docker container with:
 - Browser-based desktop access through the Coder dashboard using the official KasmVNC module.
 - code-server access through the Coder dashboard.
 - Desktop apps including Google Chrome, VS Code, LibreOffice, Files, Terminal, GIMP, Inkscape, VLC, MPV, Evince, and common CLI tools.
-- .NET SDK 10.0, .NET SDK 8.0, NVM with the current Node LTS line, and `pnpm@11.3.0`.
+- .NET SDK 10.0, .NET SDK 8.0, NVM with the current Node LTS line, `pnpm@11.3.0`, and Bun.
 - Native desktop development dependencies for WebKitGTK/WebView-style apps, keyring integration, Vulkan/LLamaSharp acceleration, and NativeAOT/build tooling.
 - CPU, memory, and dotfiles parameters.
 
@@ -56,7 +56,7 @@ The image includes the toolchain and native dependencies needed for `ExpressThat
 
 - `dotnet-sdk-10.0` and `dotnet-sdk-8.0`.
 - NVM `0.40.3` with Node LTS `24.x`.
-- `pnpm@11.3.0`, matching the repository's `packageManager`.
+- `pnpm@11.3.0`, matching the repository's `packageManager`, plus Bun.
 - WebKitGTK 4.1 runtime/development packages, `xdg-desktop-portal`, GTK, keyring/libsecret, Vulkan/Mesa, clang, CMake, Ninja, and NativeAOT build dependencies.
 
 Validated in the image:

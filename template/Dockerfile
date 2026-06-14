@@ -2,6 +2,7 @@ FROM codercom/example-desktop:ubuntu
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV NVM_DIR=/usr/local/nvm
+ENV BUN_INSTALL=/usr/local/bun
 ENV APPIMAGE_EXTRACT_AND_RUN=1
 
 USER root
@@ -120,21 +121,29 @@ RUN mkdir -p "$NVM_DIR" \
   && nvm alias default 'lts/*' \
   && nvm use default \
   && npm install -g pnpm@11.3.0 \
+  && curl -fsSL https://bun.sh/install | bash \
   && ln -sf "$NVM_DIR/versions/node/$(nvm version default)/bin/node" /usr/local/bin/node \
   && ln -sf "$NVM_DIR/versions/node/$(nvm version default)/bin/npm" /usr/local/bin/npm \
   && ln -sf "$NVM_DIR/versions/node/$(nvm version default)/bin/npx" /usr/local/bin/npx \
   && ln -sf "$NVM_DIR/versions/node/$(nvm version default)/bin/corepack" /usr/local/bin/corepack \
   && ln -sf "$NVM_DIR/versions/node/$(nvm version default)/bin/pnpm" /usr/local/bin/pnpm \
+  && ln -sf "$BUN_INSTALL/bin/bun" /usr/local/bin/bun \
+  && ln -sf "$BUN_INSTALL/bin/bunx" /usr/local/bin/bunx \
   && node --version \
   && npm --version \
   && pnpm --version \
+  && bun --version \
   && cat > /etc/profile.d/nvm.sh <<'EOF'
 export NVM_DIR=/usr/local/nvm
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
 EOF
-RUN printf '\n[ -s /etc/profile.d/nvm.sh ] && . /etc/profile.d/nvm.sh\nexport PATH="$HOME/.dotnet/tools:$PATH"\n' >> /etc/bash.bashrc \
-  && chown -R coder:coder "$NVM_DIR"
+RUN cat > /etc/profile.d/bun.sh <<'EOF'
+export BUN_INSTALL=/usr/local/bun
+export PATH="$BUN_INSTALL/bin:$PATH"
+EOF
+RUN printf '\n[ -s /etc/profile.d/nvm.sh ] && . /etc/profile.d/nvm.sh\n[ -s /etc/profile.d/bun.sh ] && . /etc/profile.d/bun.sh\nexport PATH="$HOME/.dotnet/tools:$PATH"\n' >> /etc/bash.bashrc \
+  && chown -R coder:coder "$NVM_DIR" "$BUN_INSTALL"
 
 RUN mkdir -p /etc/skel/.config/autostart /usr/local/share/applications
 
